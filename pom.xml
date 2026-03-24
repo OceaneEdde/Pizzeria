@@ -11,8 +11,8 @@
     <groupId>com.accenture</groupId>
     <artifactId>Pizzeria</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>demo</description>
+    <name>pizzeria</name>
+    <description>Pizzeria</description>
     <url/>
     <licenses>
         <license/>
