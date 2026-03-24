@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * An Entity for the ingredients of a pizza
+ */
 @Data
 @Entity
 @AllArgsConstructor
