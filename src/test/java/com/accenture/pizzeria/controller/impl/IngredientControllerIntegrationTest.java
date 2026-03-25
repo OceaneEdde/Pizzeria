@@ -1,8 +1,7 @@
-package com.accenture.pizzeria.controller;
+package com.accenture.pizzeria.controller.impl;
 
-import com.accenture.pizzeria.controller.impl.IngredientController;
 import com.accenture.pizzeria.mapper.IngredientMapper;
-import com.accenture.pizzeria.service.IngredientServiceImpl;
+import com.accenture.pizzeria.service.impl.IngredientServiceImpl;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import org.junit.jupiter.api.DisplayName;
