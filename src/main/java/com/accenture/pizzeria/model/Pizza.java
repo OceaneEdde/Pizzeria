@@ -3,6 +3,9 @@ package com.accenture.pizzeria.model;
 
 import com.accenture.pizzeria.exception.PizzeriaException;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,6 +19,8 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 public class Pizza {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     String name;
     ESize size;
@@ -41,10 +46,10 @@ public class Pizza {
 
     /**
      * This method checks if the price of pizza is Greater than Zero
-     *      and return exception if this is not
+     * and return exception if this is not
      * @throws PizzeriaException
      */
-    public void doesPricePizzaGreaterThanZero()throws PizzeriaException {
+    public void doesPricePizzaGreaterThanZero() throws PizzeriaException {
         if (this.basePrice <= 0)
             throw new PizzeriaException("Pizza's price is less than 0", HttpStatus.BAD_REQUEST);
     }
