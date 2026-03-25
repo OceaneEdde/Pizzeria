@@ -28,7 +28,7 @@ class IngredientControllerEndToEndTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    IngredientService ingredientService;
+    private IngredientService ingredientService;
 
     @Test
     @DisplayName("Create an Ingredient throught Post endpoint")
