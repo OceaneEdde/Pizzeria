@@ -4,6 +4,7 @@ import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.repository.IngredientRepository;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -88,16 +89,21 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = optIngredient.get();
         return ingredientMapper.toIngredientResponseDto(ingredient);
     }
-
     @Override
-    public IngredientResponseDto updateIngredient(UUID id, IngredientResponseDto dto) {
-        Ingredient ingredient = ingredientRepository.findById(id)
+    public IngredientResponseDto updateIngredient(String name, IngredientPatchRequestDto dto) {
+        Ingredient ingredient = ingredientRepository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("ingredient.notfound"));
+
         if (dto.name() != null)
             ingredient.setName(dto.name());
+
         if (dto.stock() != null)
             ingredient.setStock(dto.stock());
+
         Ingredient saved = ingredientRepository.save(ingredient);
         return ingredientMapper.toIngredientResponseDto(saved);
     }
+
+
+
 }

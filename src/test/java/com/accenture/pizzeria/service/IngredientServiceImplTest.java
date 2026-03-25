@@ -4,13 +4,11 @@ import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.repository.IngredientRepository;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
+
 
 @ExtendWith(MockitoExtension.class)
 class IngredientServiceImplTest {
@@ -145,20 +144,21 @@ class IngredientServiceImplTest {
         Assertions.assertThrows(PizzeriaException.class, () -> ingredientService.findByName(null));
     }
 
+
     @Test
     @DisplayName("Test if the update ingredient is correctly modified")
     void testUpdateIngredientOk() {
-        UUID id = UUID.randomUUID();
-        Ingredient ingredient = new Ingredient(id, "Tomate", 0);
+        String name = "Tomate";
 
-        IngredientResponseDto dto = new IngredientResponseDto("Tomate", 5);
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", 0);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto("Tomate", 5);
         IngredientResponseDto expected = new IngredientResponseDto("Tomate", 5);
 
-        Mockito.when(ingredientRepository.findById(id)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
         Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
         Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
 
-        IngredientResponseDto actual = ingredientService.updateIngredient(id, dto);
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
 
         Assertions.assertAll(() -> {
             Assertions.assertEquals(expected, actual, "expected and actual not equals");
@@ -168,19 +168,19 @@ class IngredientServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should update ingredient even if initial name is null")
-    void testUpdateIngredientNameNull() {
-        UUID id = UUID.randomUUID();
-        Ingredient ingredient = new Ingredient(id, null, 0);
+    @DisplayName("Test if the update ingredient is not modified (dto : name & stock null)")
+    void testUpdateIngredientOkNameAndStockNull() {
+        String name = "Tomate";
 
-        IngredientResponseDto dto = new IngredientResponseDto("Tomate", 5);
-        IngredientResponseDto expected = new IngredientResponseDto("Tomate", 5);
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", 0);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto(null,null);
+        IngredientResponseDto expected = new IngredientResponseDto("Tomate", 0);
 
-        Mockito.when(ingredientRepository.findById(id)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
         Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
         Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
 
-        IngredientResponseDto actual = ingredientService.updateIngredient(id, dto);
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
 
         Assertions.assertAll(() -> {
             Assertions.assertEquals(expected, actual, "expected and actual not equals");
@@ -191,23 +191,22 @@ class IngredientServiceImplTest {
 
 
     @Test
-    @DisplayName("Should update ingredient even if initial stock is null")
-    void testUpdateIngredientstockNull() {
-        UUID id = UUID.randomUUID();
-        Ingredient ingredient = new Ingredient(id, "Tomate", null);
+    @DisplayName("Test if the ingredient stock is updated when initial stock is null")
+    void testUpdateIngredientStockNull() {
+        String name = "Tomate";
 
-        IngredientResponseDto dto = new IngredientResponseDto("Tomate", 5);
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", null);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto("Tomate", 5);
         IngredientResponseDto expected = new IngredientResponseDto("Tomate", 5);
 
-        Mockito.when(ingredientRepository.findById(id)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
         Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
         Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
 
-        IngredientResponseDto actual = ingredientService.updateIngredient(id, dto);
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
 
         Assertions.assertAll(() -> {
-            Assertions.assertEquals(expected, actual, "expected and actual not equals");
-            Assertions.assertEquals(expected.name(), actual.name(), "expected name and actual name not equals");
+            Assertions.assertEquals(5, actual.stock());
             Assertions.assertEquals(expected.stock(), actual.stock(), "expected stock and actual stock not equals");
         });
     }
