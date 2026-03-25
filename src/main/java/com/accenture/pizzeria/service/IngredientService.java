@@ -15,4 +15,6 @@ public interface IngredientService {
     IngredientResponseDto findById(UUID id) throws PizzeriaException;
 
     IngredientResponseDto findByName(String name) throws PizzeriaException;
+
+    IngredientResponseDto updateIngredient(UUID id, IngredientResponseDto expectedResponseDto);
 }

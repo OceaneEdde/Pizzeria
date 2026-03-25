@@ -55,6 +55,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     /**
      * Method to find an Ingredient by it's Id in the database.
+     *
      * @param id the Id on which we query the repository.
      * @return An IngredientResponseDto reflecting the Ingredient found in the database.
      * @throws PizzeriaException when the Id is null.
@@ -72,6 +73,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     /**
      * Method to find an Ingredient by it's name in the database.
+     *
      * @param name the name on which we query the repository.
      * @return An IngredientResponseDto reflecting the Ingredient found in the database.
      * @throws PizzeriaException when the name is null.
@@ -85,5 +87,17 @@ public class IngredientServiceImpl implements IngredientService {
             throw new EntityNotFoundException("ingredient.notfound");
         Ingredient ingredient = optIngredient.get();
         return ingredientMapper.toIngredientResponseDto(ingredient);
+    }
+
+    @Override
+    public IngredientResponseDto updateIngredient(UUID id, IngredientResponseDto dto) {
+        Ingredient ingredient = ingredientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ingredient.notfound"));
+        if (dto.name() != null)
+            ingredient.setName(dto.name());
+        if (dto.stock() != null)
+            ingredient.setStock(dto.stock());
+        Ingredient saved = ingredientRepository.save(ingredient);
+        return ingredientMapper.toIngredientResponseDto(saved);
     }
 }
