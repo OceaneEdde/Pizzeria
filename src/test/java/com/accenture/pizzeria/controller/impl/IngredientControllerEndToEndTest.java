@@ -1,4 +1,4 @@
-package com.accenture.pizzeria.controller;
+package com.accenture.pizzeria.controller.impl;
 
 import com.accenture.pizzeria.service.IngredientService;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;

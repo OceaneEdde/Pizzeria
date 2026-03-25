@@ -1,9 +1,10 @@
-package com.accenture.pizzeria.service;
+package com.accenture.pizzeria.service.impl;
 
 import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.repository.IngredientRepository;
+import com.accenture.pizzeria.service.IngredientService;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;

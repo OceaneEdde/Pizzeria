@@ -1,4 +1,4 @@
-package com.accenture.pizzeria.service;
+package com.accenture.pizzeria.service.impl;
 
 import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.PizzaMapper;
@@ -6,6 +6,7 @@ import com.accenture.pizzeria.model.ESize;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.model.Pizza;
 import com.accenture.pizzeria.repository.PizzaRepository;
+import com.accenture.pizzeria.service.PizzaService;
 import com.accenture.pizzeria.service.dto.PizzaRequestDto;
 import com.accenture.pizzeria.service.dto.PizzaResponseDto;
 import org.junit.jupiter.api.Assertions;

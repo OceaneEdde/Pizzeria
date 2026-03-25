@@ -1,10 +1,9 @@
-package com.accenture.pizzeria.controller;
+package com.accenture.pizzeria.controller.impl;
 
-import com.accenture.pizzeria.controller.impl.PizzaController;
 import com.accenture.pizzeria.mapper.PizzaMapper;
 import com.accenture.pizzeria.model.ESize;
 import com.accenture.pizzeria.model.Ingredient;
-import com.accenture.pizzeria.service.PizzaServiceImpl;
+import com.accenture.pizzeria.service.impl.PizzaServiceImpl;
 import com.accenture.pizzeria.service.dto.PizzaRequestDto;
 import com.accenture.pizzeria.service.dto.PizzaResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
