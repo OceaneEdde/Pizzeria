@@ -9,6 +9,7 @@ import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class IngredientServiceImpl implements IngredientService {
 
     private IngredientRepository ingredientRepository;
@@ -33,7 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto addIngredient(IngredientRequestDto requestDto) throws PizzeriaException {
-
+        log.info("Accessing Service Method : addIngredient");
         if (requestDto == null)
             throw new PizzeriaException("ingredient.dto.null", HttpStatus.BAD_REQUEST);
 
@@ -51,6 +53,7 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public List<IngredientResponseDto> findAll() {
+        log.info("Accessing INGREDIENT Service Method : findAll");
         return ingredientRepository.findAll().stream().map(ingredient -> ingredientMapper.toIngredientResponseDto(ingredient)).toList();
     }
 
@@ -62,6 +65,7 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto findById(UUID id) throws PizzeriaException {
+        log.info("Accessing INGREDIENT Service Method : findById");
         if (null == id)
             throw new PizzeriaException("id.null", HttpStatus.BAD_REQUEST);
         Optional<Ingredient> optIngredient = ingredientRepository.findById(id);
@@ -79,6 +83,7 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto findByName(String name) throws PizzeriaException {
+        log.info("Accessing INGREDIENT Service Method : findByName");
         if (null == name)
             throw new PizzeriaException("ingredient.name.null", HttpStatus.BAD_REQUEST);
         Optional<Ingredient> optIngredient = ingredientRepository.findByName(name);

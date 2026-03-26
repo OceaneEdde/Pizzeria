@@ -23,18 +23,28 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final MessageSourceAccessor messages;
 
-
+    /**
+     * Service method to add a new customer in the database
+     * @param requestDto a CustomerRequestDto
+     * @return a CustomerResponseDto, reflecting the newly created Customer
+     * @throws PizzeriaException when the DTO is malformed or null
+     */
     @Override
     public CustomerResponseDto addCustomer(CustomerRequestDto requestDto) throws PizzeriaException {
-        log.info("Accessing Service Method : addCustomer");
+        log.info("Accessing CUSTOMER Service Method : addCustomer");
         verify(requestDto);
         Customer saved = customerRepository.save(customerMapper.toEntity(requestDto));
         return customerMapper.toResponseDto(saved);
     }
 
+    /**
+     * Service method to verify the CustomerRequestDtos
+     * @param requestDto any CustomerRequestDto
+     * @throws PizzeriaException when the DTO is malformed or null
+     */
     @Override
     public void verify(CustomerRequestDto requestDto) throws PizzeriaException {
-        log.info("Accessing Service Method : verify");
+        log.info("Accessing CUSTOMER Service Method : verify");
         if(null==requestDto)
             throw new PizzeriaException(messages.getMessage("dto.null"), HttpStatus.BAD_REQUEST);
     }
