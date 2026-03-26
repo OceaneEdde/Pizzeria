@@ -2,10 +2,7 @@ package com.accenture.pizzeria.model;
 
 
 import com.accenture.pizzeria.exception.PizzeriaException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -24,6 +21,8 @@ public class Pizza {
     UUID id;
     String name;
     ESize size;
+
+
     List<Ingredient> ingredients;
     double basePrice;
 
