@@ -1,6 +1,7 @@
 package com.accenture.pizzeria.mapper;
 
 import com.accenture.pizzeria.model.Ingredient;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import org.mapstruct.Mapper;
@@ -9,4 +10,5 @@ import org.mapstruct.Mapper;
 public interface IngredientMapper {
     Ingredient toIngredient(IngredientRequestDto ingredientRequestDto);
     IngredientResponseDto toIngredientResponseDto(Ingredient ingredient);
+    Ingredient toIngredient(IngredientPatchRequestDto ingredientPatchRequestDto);
 }

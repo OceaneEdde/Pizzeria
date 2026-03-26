@@ -1,6 +1,7 @@
 package com.accenture.pizzeria.service;
 
 import com.accenture.pizzeria.exception.PizzeriaException;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 
@@ -15,4 +16,6 @@ public interface IngredientService {
     IngredientResponseDto findById(UUID id) throws PizzeriaException;
 
     IngredientResponseDto findByName(String name) throws PizzeriaException;
+
+    IngredientResponseDto updateIngredient(String name, IngredientPatchRequestDto patchRequestDto);
 }
