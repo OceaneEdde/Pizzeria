@@ -16,10 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.MessageSourceAccessor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +39,8 @@ class OrderServiceImplTest {
     private CustomerMapper customerMapper;
     @Mock
     private CustomerRepository customerRepository;
+    @Mock
+    private MessageSourceAccessor msg;
 
     @BeforeEach
     void setup() {
@@ -44,7 +48,8 @@ class OrderServiceImplTest {
         orderMapper = Mockito.mock(OrderMapper.class);
         customerMapper = Mockito.mock(CustomerMapper.class);
         customerRepository = Mockito.mock(CustomerRepository.class);
-        orderService = new OrderServiceImpl(orderRepository, orderMapper, customerRepository, customerMapper);
+        msg = Mockito.mock(MessageSourceAccessor.class);
+        orderService = new OrderServiceImpl(orderRepository, orderMapper, customerRepository, msg);
     }
 
     @Test
@@ -84,7 +89,8 @@ class OrderServiceImplTest {
 
         when(orderMapper.toOrder(any(OrderRequestDto.class))).thenReturn(order);
         when(orderRepository.save(any(Order.class))).thenReturn(order);
-        when(customerMapper.toResponseDto(any(Customer.class))).thenReturn(customerResponseDto);
+        when(orderMapper.toOrderResponseDto(any(Order.class))).thenReturn(expectedResponse);
+        when(customerRepository.findByEmail(any(String.class))).thenReturn(Optional.of(customer));
 
         OrderResponseDto actual = orderService.addOrder(requestDto);
 
@@ -97,5 +103,13 @@ class OrderServiceImplTest {
                 () -> Assertions.assertEquals(expectedResponse.date(), actual.date()),
                 () -> Assertions.assertEquals(order, customer.getOrders().getFirst())
         );
+    }
+
+    @Test
+    @DisplayName("Add a new Order Fail, dto is null")
+    void testOrderFailDtoNull() {
+        PizzeriaException pizzeriaException = Assertions.assertThrows(PizzeriaException.class,()->orderService.addOrder(null));
+        Assertions.assertNotNull(pizzeriaException);
+        Assertions.assertEquals(msg.getMessage("order.dto.null"),pizzeriaException.getMessage());
     }
 }
