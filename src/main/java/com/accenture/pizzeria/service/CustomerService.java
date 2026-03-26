@@ -8,4 +8,6 @@ public interface CustomerService {
 
     CustomerResponseDto addCustomer(CustomerRequestDto requestDto) throws PizzeriaException;
     void verify(CustomerRequestDto requestDto) throws PizzeriaException;
+
+    CustomerResponseDto findByEmail(String email) throws PizzeriaException;
 }
