@@ -103,5 +103,6 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient updatedIngredient = ingredientRepository.save(ingredient);
 
         return ingredientMapper.toIngredientResponseDto(updatedIngredient);
+
     }
 }
