@@ -1,14 +1,15 @@
-package com.accenture.pizzeria.service;
+package com.accenture.pizzeria.service.impl;
 
 import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.repository.IngredientRepository;
+import com.accenture.pizzeria.service.IngredientService;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto addIngredient(IngredientRequestDto requestDto) throws PizzeriaException {
-        log.info("Accessing Service Method : addIngredient");
+
         if (requestDto == null)
             throw new PizzeriaException("ingredient.dto.null", HttpStatus.BAD_REQUEST);
 
@@ -51,7 +52,6 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public List<IngredientResponseDto> findAll() {
-        log.info("Accessing INGREDIENT Service Method : findAll");
         return ingredientRepository.findAll().stream().map(ingredient -> ingredientMapper.toIngredientResponseDto(ingredient)).toList();
     }
 
@@ -63,7 +63,6 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto findById(UUID id) throws PizzeriaException {
-        log.info("Accessing INGREDIENT Service Method : findById");
         if (null == id)
             throw new PizzeriaException("id.null", HttpStatus.BAD_REQUEST);
         Optional<Ingredient> optIngredient = ingredientRepository.findById(id);
@@ -81,7 +80,6 @@ public class IngredientServiceImpl implements IngredientService {
      */
     @Override
     public IngredientResponseDto findByName(String name) throws PizzeriaException {
-        log.info("Accessing INGREDIENT Service Method : findByName");
         if (null == name)
             throw new PizzeriaException("ingredient.name.null", HttpStatus.BAD_REQUEST);
         Optional<Ingredient> optIngredient = ingredientRepository.findByName(name);
@@ -90,21 +88,20 @@ public class IngredientServiceImpl implements IngredientService {
         Ingredient ingredient = optIngredient.get();
         return ingredientMapper.toIngredientResponseDto(ingredient);
     }
+
     @Override
-    public IngredientResponseDto updateIngredient(String name, IngredientPatchRequestDto dto) {
+    public IngredientResponseDto updateIngredient(String name, IngredientPatchRequestDto patchRequestDto) {
+
         Ingredient ingredient = ingredientRepository.findByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("ingredient.notfound"));
 
-        if (dto.name() != null)
-            ingredient.setName(dto.name());
+        if (patchRequestDto.name() != null)
+            ingredient.setName(patchRequestDto.name());
+        if (patchRequestDto.stock() != null)
+            ingredient.setStock(patchRequestDto.stock());
 
-        if (dto.stock() != null)
-            ingredient.setStock(dto.stock());
+        Ingredient updatedIngredient = ingredientRepository.save(ingredient);
 
-        Ingredient saved = ingredientRepository.save(ingredient);
-        return ingredientMapper.toIngredientResponseDto(saved);
+        return ingredientMapper.toIngredientResponseDto(updatedIngredient);
     }
-
-
-
 }
