@@ -4,11 +4,13 @@ import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.repository.IngredientRepository;
-import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -20,7 +22,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
-
 
 @ExtendWith(MockitoExtension.class)
 class IngredientServiceImplTest {
@@ -62,18 +63,17 @@ class IngredientServiceImplTest {
     @Test
     @DisplayName("Test to add a new Ingredient when requestDto is null")
     void testAddIngredientNotValidInput() {
-        Assertions.assertThrows(PizzeriaException.class, () -> ingredientService.addIngredient(null), "DtoRequest should not be null");
+        Assertions.assertThrows(PizzeriaException.class, ()-> ingredientService.addIngredient(null), "DtoRequest should not be null");
     }
 
     @Test
     @DisplayName("Test to find all Ingredients")
-    void testFindAll() {
+    void testFindAll(){
         List<Ingredient> ingredientList = new ArrayList<>();
         Mockito.when(ingredientRepository.findAll()).thenReturn(ingredientList);
         List<IngredientResponseDto> ingredientResponseDtoList = ingredientService.findAll();
         Assertions.assertNotNull(ingredientResponseDtoList);
     }
-
     @Test
     @DisplayName("Test to find Ingredient by Id success")
     void testfindByIdSuccess() throws PizzeriaException {
@@ -94,20 +94,18 @@ class IngredientServiceImplTest {
             Assertions.assertEquals(expectedResponseDto.stock(), actualResponseDto.stock(), "expected stock and actual stock not equals");
         });
     }
-
     @Test
     @DisplayName("Test to find Ingredient by Id fail not found")
     void testfindByIdFailNotFound() {
         Mockito.when(ingredientRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
-        Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientService.findById(UUID.randomUUID()));
+        Assertions.assertThrows(EntityNotFoundException.class,()->ingredientService.findById(UUID.randomUUID()));
     }
 
     @Test
     @DisplayName("Test to find Ingredient by Id fail Id null")
     void testfindByIdFailIdNull() {
-        Assertions.assertThrows(PizzeriaException.class, () -> ingredientService.findById(null), "id.null");
+        Assertions.assertThrows(PizzeriaException.class,()->ingredientService.findById(null),"id.null");
     }
-
     @Test
     @DisplayName("Test to find Ingredient by Name success")
     void testfindByNameSuccess() throws PizzeriaException {
@@ -129,7 +127,6 @@ class IngredientServiceImplTest {
             Assertions.assertEquals(expectedResponseDto.stock(), actualResponseDto.stock(), "expected stock and actual stock not equals");
         });
     }
-
     @Test
     @DisplayName("Test to find Ingredient by Name fail not found")
     void testfindByNameFailNotFound() {
@@ -137,7 +134,6 @@ class IngredientServiceImplTest {
         Mockito.when(ingredientRepository.findByName(Mockito.any(String.class))).thenReturn(Optional.empty());
         Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientService.findByName(name));
     }
-
     @Test
     @DisplayName("Test to find Ingredient by Name fail not found")
     void testfindByNameFailNameNull() {
