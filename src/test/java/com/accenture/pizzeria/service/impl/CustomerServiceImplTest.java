@@ -10,10 +10,13 @@ import com.accenture.pizzeria.service.CustomerService;
 import com.accenture.pizzeria.service.dto.AddressDto;
 import com.accenture.pizzeria.service.dto.CustomerRequestDto;
 import com.accenture.pizzeria.service.dto.CustomerResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +31,7 @@ class CustomerServiceImplTest {
     private static final String BASE_FIRST_NAME = "Jean";
     private static final String BASE_LAST_NAME = "Petit";
     private static final String BASE_EMAIL = "jean.petit@customer.com";
+    private static final String BLANK_STRING = "    ";
     @Mock
     private CustomerRepository customerRepository;
     @Mock
@@ -100,6 +104,73 @@ class CustomerServiceImplTest {
             PizzeriaException pizzeriaException = assertThrows(PizzeriaException.class, () -> spy.addCustomer(null));
             assertEquals(messages.getMessage("dto.null"), pizzeriaException.getMessage());
             verify(spy, times(1)).verify(any());
+        }
+    }
+
+    @Nested
+    class TestCustomerFindByMail {
+        @Test
+        @DisplayName("Find a customer by email success")
+        void testFindCustomerByEmailSuccess() {
+            UUID addressId = UUID.randomUUID();
+            AddressDto addressDto = new AddressDto(BASE_STREET, BASE_CITY, BASE_POSTAL_CODE);
+            Address address = new Address(addressId, BASE_STREET, BASE_CITY, BASE_POSTAL_CODE);
+
+            UUID customerId = UUID.randomUUID();
+            Boolean isVip = false;
+            CustomerResponseDto expectedResponseDto = new CustomerResponseDto(customerId, BASE_FIRST_NAME, BASE_LAST_NAME, BASE_EMAIL, addressDto, isVip);
+
+            Customer customerEntity = new Customer(customerId, BASE_FIRST_NAME, BASE_LAST_NAME, BASE_EMAIL, address);
+
+            when(customerRepository.findByEmail(any(String.class))).thenReturn(Optional.of(customerEntity));
+            when(addressMapper.toDto(any(Address.class))).thenReturn(addressDto);
+            when(customerMapper.toResponseDto(any(Customer.class))).thenReturn(expectedResponseDto);
+
+            CustomerResponseDto actualResponseDto = assertDoesNotThrow(() -> customerService.findByEmail(BASE_EMAIL));
+
+            Assertions.assertAll(
+                    () -> Assertions.assertNotNull(actualResponseDto, "DtoResponse should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.id(), "Id should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.firstName(), "firstName should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.firstName(), actualResponseDto.firstName(), "firstName should be the same"),
+                    () -> Assertions.assertNotNull(actualResponseDto.lastName(), "lastName should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.lastName(), actualResponseDto.lastName(), "lastName should be the same"),
+                    () -> Assertions.assertNotNull(actualResponseDto.email(), "email should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.email(), actualResponseDto.email(), "email should be the same"),
+                    () -> Assertions.assertNotNull(actualResponseDto.address(), "address should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.address().street(), "Address's street should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.address().city(), "Address's city should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.address().postalCode(), "Address's postalCode should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.isVip(), "isVip should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.isVip(), actualResponseDto.isVip(), "isVip should be the same")
+            );
+        }
+
+        @Test
+        @DisplayName("Find a customer by email fail,customer not found")
+        void testFindCustomerByEmailFailNotFound() {
+            when(customerRepository.findByEmail(any(String.class))).thenReturn(Optional.empty());
+
+            EntityNotFoundException entityNotFoundException = assertThrows(EntityNotFoundException.class,() -> customerService.findByEmail(BASE_EMAIL));
+            assertNotNull(entityNotFoundException);
+            assertEquals(messages.getMessage("customer.notfound"),entityNotFoundException.getMessage());
+        }
+
+        @Test
+        @DisplayName("Find a customer by email fail, email null")
+        void testFindCustomerByEmailFailEmailNull() {
+            PizzeriaException pizzeriaException = assertThrows(PizzeriaException.class,() -> customerService.findByEmail(null));
+            assertNotNull(pizzeriaException);
+            assertEquals(messages.getMessage("customer.email.invalid"),pizzeriaException.getMessage());
+            assertEquals(HttpStatus.BAD_REQUEST,pizzeriaException.getCode());
+        }
+        @Test
+        @DisplayName("Find a customer by email fail, email blank")
+        void testFindCustomerByEmailFailEmailBlank() {
+            PizzeriaException pizzeriaException = assertThrows(PizzeriaException.class,() -> customerService.findByEmail(BLANK_STRING));
+            assertNotNull(pizzeriaException);
+            assertEquals(messages.getMessage("customer.email.invalid"),pizzeriaException.getMessage());
+            assertEquals(HttpStatus.BAD_REQUEST,pizzeriaException.getCode());
         }
     }
 }

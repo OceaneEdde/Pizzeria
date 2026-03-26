@@ -7,6 +7,7 @@ import com.accenture.pizzeria.service.dto.CustomerRequestDto;
 import com.accenture.pizzeria.service.dto.CustomerResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,5 +31,11 @@ public class CustomerController implements CustomerApi {
                 .buildAndExpand(responseDto.id())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @Override
+    public ResponseEntity<CustomerResponseDto> getCustomerByEmail(String email) throws PizzeriaException {
+        log.info("Accessing ENDPOINT : GET /customers/email/{}", email);
+        return ResponseEntity.status(HttpStatus.OK).body(customerService.findByEmail(email));
     }
 }

@@ -19,6 +19,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -80,6 +81,40 @@ class CustomerControllerIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(new ObjectMapper().writeValueAsString(dto)))
                     .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
+    class TestGet{
+        @Nested
+        class TestFindByEmail{
+            @Test
+            @DisplayName("Test to find a customer by it's email in the H2 database, success")
+            void testFinByEmailSuccess() throws Exception {
+                AddressDto addressDto = new AddressDto(BASE_STREET,BASE_CITY,BASE_POSTAL_CODE);
+                CustomerResponseDto responseDto = new CustomerResponseDto(UUID.randomUUID(), BASE_FIRST_NAME,BASE_LAST_NAME,BASE_EMAIL,addressDto,false);
+
+                doReturn(responseDto).when(customerService).findByEmail(any(String.class));
+
+                mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT+"/email/"+BASE_EMAIL)
+                                .with(csrf())
+                                .with(user("test").roles("USER"))
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            @DisplayName("Test to find a customer by it's email in the H2 database, fail, email is blank")
+            void testFindByEmailFailEmailBlank() throws Exception {
+
+                doThrow(PizzeriaException.class).when(customerService).findByEmail(BLANK_STRING);
+
+                mockMvc.perform(MockMvcRequestBuilders.get(API_CUSTOMERS_ENDPOINT+"/email/"+BLANK_STRING)
+                                .with(csrf())
+                                .with(user("test").roles("USER"))
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isBadRequest());
+            }
         }
     }
 
