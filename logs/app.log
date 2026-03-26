@@ -1,0 +1,17 @@
+2026-03-26T11:46:56.879+01:00  INFO 29832 --- [pizzeria] [main] .c.i.IngredientControllerIntegrationTest : Starting IngredientControllerIntegrationTest using Java 25.0.2 with PID 29832 (started by oceane.edde in C:\Users\oceane.edde\Desktop\Pizzeria)
+2026-03-26T11:46:56.900+01:00  INFO 29832 --- [pizzeria] [main] .c.i.IngredientControllerIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2026-03-26T11:47:02.047+01:00  WARN 29832 --- [pizzeria] [main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: b284f4c7-aa8c-4f2a-8163-30b909530ccc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-03-26T11:47:02.161+01:00  INFO 29832 --- [pizzeria] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-03-26T11:47:02.946+01:00  INFO 29832 --- [pizzeria] [main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-03-26T11:47:02.947+01:00  INFO 29832 --- [pizzeria] [main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-03-26T11:47:02.954+01:00  INFO 29832 --- [pizzeria] [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 6 ms
+2026-03-26T11:47:03.035+01:00  INFO 29832 --- [pizzeria] [main] .c.i.IngredientControllerIntegrationTest : Started IngredientControllerIntegrationTest in 6.802 seconds (process running for 10.445)
+2026-03-26T11:47:03.372+01:00  INFO 29832 --- [pizzeria] [main] c.a.p.c.impl.IngredientController        : Accessing ENDPOINT : GET /customers/4139dc2f-6bf2-4280-b003-af9d0b6384cf
+2026-03-26T11:47:03.731+01:00  INFO 29832 --- [pizzeria] [main] c.a.p.c.impl.IngredientController        : Accessing ENDPOINT : GET /customers/name/Tomato
+2026-03-26T11:47:03.855+01:00  INFO 29832 --- [pizzeria] [main] c.a.p.c.impl.IngredientController        : Accessing ENDPOINT : GET /customers
+2026-03-26T11:47:04.268+01:00  INFO 29832 --- [pizzeria] [main] c.a.p.c.impl.IngredientController        : Accessing ENDPOINT : POST /ingredients

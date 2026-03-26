@@ -3,8 +3,9 @@ package com.accenture.pizzeria.service.impl;
 import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.mapper.IngredientMapper;
 import com.accenture.pizzeria.model.Ingredient;
-import com.accenture.pizzeria.repository.IngredientRepository;
 import com.accenture.pizzeria.service.IngredientService;
+import com.accenture.pizzeria.repository.IngredientRepository;
+import com.accenture.pizzeria.service.dto.IngredientPatchRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -133,11 +134,78 @@ class IngredientServiceImplTest {
     void testfindByNameFailNotFound() {
         String name = "Tomate";
         Mockito.when(ingredientRepository.findByName(Mockito.any(String.class))).thenReturn(Optional.empty());
-        Assertions.assertThrows(EntityNotFoundException.class,()->ingredientService.findByName(name));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> ingredientService.findByName(name));
     }
     @Test
     @DisplayName("Test to find Ingredient by Name fail not found")
     void testfindByNameFailNameNull() {
-        Assertions.assertThrows(PizzeriaException.class,()->ingredientService.findByName(null));
+        Assertions.assertThrows(PizzeriaException.class, () -> ingredientService.findByName(null));
+    }
+
+
+    @Test
+    @DisplayName("Test if the update ingredient is correctly modified")
+    void testUpdateIngredientOk() {
+        String name = "Tomate";
+
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", 0);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto("Tomate", 5);
+        IngredientResponseDto expected = new IngredientResponseDto("Tomate", 5);
+
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
+
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(expected, actual, "expected and actual not equals");
+            Assertions.assertEquals(expected.name(), actual.name(), "expected name and actual name not equals");
+            Assertions.assertEquals(expected.stock(), actual.stock(), "expected stock and actual stock not equals");
+        });
+    }
+
+    @Test
+    @DisplayName("Test if the update ingredient is not modified (dto : name & stock null)")
+    void testUpdateIngredientOkNameAndStockNull() {
+        String name = "Tomate";
+
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", 0);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto(null,null);
+        IngredientResponseDto expected = new IngredientResponseDto("Tomate", 0);
+
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
+
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(expected, actual, "expected and actual not equals");
+            Assertions.assertEquals(expected.name(), actual.name(), "expected name and actual name not equals");
+            Assertions.assertEquals(expected.stock(), actual.stock(), "expected stock and actual stock not equals");
+        });
+    }
+
+
+    @Test
+    @DisplayName("Test if the ingredient stock is updated when initial stock is null")
+    void testUpdateIngredientStockNull() {
+        String name = "Tomate";
+
+        Ingredient ingredient = new Ingredient(UUID.randomUUID(), "Tomate", null);
+        IngredientPatchRequestDto dto = new IngredientPatchRequestDto("Tomate", 5);
+        IngredientResponseDto expected = new IngredientResponseDto("Tomate", 5);
+
+        Mockito.when(ingredientRepository.findByName(name)).thenReturn(Optional.of(ingredient));
+        Mockito.when(ingredientRepository.save(Mockito.any(Ingredient.class))).thenReturn(ingredient);
+        Mockito.when(ingredientMapper.toIngredientResponseDto(Mockito.any(Ingredient.class))).thenReturn(expected);
+
+        IngredientResponseDto actual = ingredientService.updateIngredient(name, dto);
+
+        Assertions.assertAll(() -> {
+            Assertions.assertEquals(5, actual.stock());
+            Assertions.assertEquals(expected.stock(), actual.stock(), "expected stock and actual stock not equals");
+        });
     }
 }
