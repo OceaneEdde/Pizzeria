@@ -18,7 +18,7 @@ public record PizzaRequestDto (
     List<Ingredient> ingredients,
 
     @NotNull(message = "pizza.error.basePrice")
-    double basePrice)
+    Double basePrice)
 
 {
 

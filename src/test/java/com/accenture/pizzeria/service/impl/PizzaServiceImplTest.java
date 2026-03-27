@@ -49,9 +49,9 @@ class PizzaServiceImplTest {
         ESize size = ESize.SMALL;
         List<Ingredient> ingredients = List.of(ingredient);
 
-        PizzaRequestDto dtoRequest = new PizzaRequestDto("Margarita", ESize.SMALL, ingredients, 10);
-        PizzaResponseDto returnedResponse = new PizzaResponseDto("Margarita",ESize.SMALL, ingredients, 10);
-        Pizza pizzaEntity = new Pizza(name, size, ingredients,10);
+        PizzaRequestDto dtoRequest = new PizzaRequestDto("Margarita", ESize.SMALL, ingredients, 10.0);
+        PizzaResponseDto returnedResponse = new PizzaResponseDto("Margarita",ESize.SMALL, ingredients, 10.0);
+        Pizza pizzaEntity = new Pizza(name, size, ingredients,10.0);
         Pizza spy = Mockito.spy(pizzaEntity);
 
         Mockito.when(pizzaMapper.toPizza(Mockito.any(PizzaRequestDto.class))).thenReturn(spy);

@@ -63,26 +63,26 @@ class OrderServiceImplTest {
         Ingredient basilic = new Ingredient(UUID.randomUUID(), "Basilic", 100);
         List<Ingredient> ingredients = List.of(tomato, cheese, basilic);
 
-        PizzaRequestDto pizzaSmall = new PizzaRequestDto("Margarita", ESize.SMALL, ingredients, 10);
+        PizzaRequestDto pizzaSmall = new PizzaRequestDto("Margarita", ESize.SMALL, ingredients, 10.0);
 
-        PizzaRequestDto pizzaMedium = new PizzaRequestDto("Margarita", ESize.MEDIUM, ingredients, 10);
-        PizzaRequestDto pizzaLarge = new PizzaRequestDto("Margarita", ESize.LARGE, ingredients, 10);
+        PizzaRequestDto pizzaMedium = new PizzaRequestDto("Margarita", ESize.MEDIUM, ingredients, 10.0);
+        PizzaRequestDto pizzaLarge = new PizzaRequestDto("Margarita", ESize.LARGE, ingredients, 10.0);
         List<PizzaRequestDto> pizzas = List.of(pizzaSmall, pizzaMedium, pizzaLarge);
 
         OrderRequestDto requestDto = new OrderRequestDto("joe.leblanc@gmail.fr", pizzas);
 
-        Pizza pizzaSmallEntity = new Pizza("Margarita", ESize.SMALL, ingredients, 10);
-        Pizza pizzaMediumEntity = new Pizza("Margarita", ESize.MEDIUM, ingredients, 10);
-        Pizza pizzaLargeEntity = new Pizza("Margarita", ESize.LARGE, ingredients, 10);
+        Pizza pizzaSmallEntity = new Pizza("Margarita", ESize.SMALL, ingredients, 10.0);
+        Pizza pizzaMediumEntity = new Pizza("Margarita", ESize.MEDIUM, ingredients, 10.0);
+        Pizza pizzaLargeEntity = new Pizza("Margarita", ESize.LARGE, ingredients, 10.0);
         List<Pizza> pizzasListEntity = List.of(pizzaSmallEntity, pizzaMediumEntity, pizzaLargeEntity);
 
         Order order = new Order(UUID.randomUUID(), customer, pizzasListEntity, EStatus.PENDING, LocalDateTime.now());
 
         customer.getOrders().add(order);
 
-        PizzaResponseDto pizzaSmallResponse = new PizzaResponseDto("Margarita", ESize.SMALL, ingredients, 10);
-        PizzaResponseDto pizzaMediumResponse = new PizzaResponseDto("Margarita", ESize.MEDIUM, ingredients, 10);
-        PizzaResponseDto pizzaLargeResponse = new PizzaResponseDto("Margarita", ESize.LARGE, ingredients, 10);
+        PizzaResponseDto pizzaSmallResponse = new PizzaResponseDto("Margarita", ESize.SMALL, ingredients, 10.0);
+        PizzaResponseDto pizzaMediumResponse = new PizzaResponseDto("Margarita", ESize.MEDIUM, ingredients, 10.0);
+        PizzaResponseDto pizzaLargeResponse = new PizzaResponseDto("Margarita", ESize.LARGE, ingredients, 10.0);
         List<PizzaResponseDto> pizzasListResponse = List.of(pizzaSmallResponse, pizzaMediumResponse, pizzaLargeResponse);
 
         OrderResponseDto expectedResponse = new OrderResponseDto(order.getId(), customerResponseDto, pizzasListResponse, EStatus.PENDING, 37.0, LocalDateTime.now());

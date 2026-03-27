@@ -22,9 +22,14 @@ public class Pizza {
     String name;
     ESize size;
 
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "pizza_ingredient",
+            joinColumns = @JoinColumn(name = "pizza_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
     List<Ingredient> ingredients;
-    double basePrice;
+    Double basePrice;
 
     public Pizza(String name, ESize size, List<Ingredient> ingredients, double basePrice) {
         this.name = name;

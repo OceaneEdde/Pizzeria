@@ -19,8 +19,9 @@ public class Customer {
     private UUID uuid;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
-    @OneToMany
+    @OneToMany(mappedBy = "customer")
     List<Order> orders;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")

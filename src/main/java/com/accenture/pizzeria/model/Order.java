@@ -15,12 +15,15 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Table(name="orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_uuid", nullable = false)
     private Customer customer;
 
     @ManyToMany
