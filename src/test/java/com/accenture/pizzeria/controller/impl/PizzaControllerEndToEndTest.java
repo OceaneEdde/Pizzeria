@@ -3,6 +3,7 @@ package com.accenture.pizzeria.controller.impl;
 
 import com.accenture.pizzeria.model.ESize;
 import com.accenture.pizzeria.model.Ingredient;
+import com.accenture.pizzeria.repository.IngredientRepository;
 import com.accenture.pizzeria.service.impl.PizzaServiceImpl;
 import com.accenture.pizzeria.service.dto.PizzaRequestDto;
 import com.accenture.pizzeria.service.dto.PizzaResponseDto;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
-@ActiveProfiles
+@ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PizzaControllerEndToEndTest {
     private static final String URL = "http://localhost:";
@@ -35,6 +36,8 @@ class PizzaControllerEndToEndTest {
     @Autowired
     private PizzaServiceImpl pizzaService;
 
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @Test
     @Order(1)
@@ -42,8 +45,9 @@ class PizzaControllerEndToEndTest {
         String name = "Pizza";
         ESize size = ESize.SMALL;
         Ingredient ingredient = new Ingredient("Tomato", 1);
-        List<Ingredient> ingredients = List.of(ingredient);
-        double basePrice = 10;
+        Ingredient savedIngredient = ingredientRepository.save(ingredient);
+        List<Ingredient> ingredients = List.of(savedIngredient);
+        Double basePrice = 10.0;
 
         PizzaRequestDto pizzaRequestDto = new PizzaRequestDto(name, size, ingredients, basePrice);
         ResponseEntity<PizzaResponseDto> response = restTemplate.postForEntity(URL + port + ENDPOINT_PIZZA, pizzaRequestDto, PizzaResponseDto.class);

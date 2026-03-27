@@ -28,7 +28,7 @@ public class CustomerController implements CustomerApi {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(responseDto.id())
+                .buildAndExpand(responseDto.uuid())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

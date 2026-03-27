@@ -22,9 +22,9 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
-    private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
-    private final MessageSourceAccessor messages;
+    private CustomerRepository customerRepository;
+    private CustomerMapper customerMapper;
+    private MessageSourceAccessor messages;
 
     /**
      * Service method to add a new customer in the database
@@ -37,7 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponseDto addCustomer(CustomerRequestDto requestDto) throws PizzeriaException {
         log.info("Accessing CUSTOMER Service Method : addCustomer");
         verify(requestDto);
-        Customer saved = customerRepository.save(customerMapper.toEntity(requestDto));
+        Customer customer = customerMapper.toEntity(requestDto);
+        customer.setIsVIP(false);
+        Customer saved = customerRepository.save(customer);
         return customerMapper.toResponseDto(saved);
     }
 

@@ -5,6 +5,6 @@ import com.accenture.pizzeria.model.Ingredient;
 
 import java.util.List;
 
-public record PizzaResponseDto(String name, ESize size, List<Ingredient> ingredients, double basePrice) {
+public record PizzaResponseDto(String name, ESize size, List<Ingredient> ingredients, Double basePrice) {
 
 }

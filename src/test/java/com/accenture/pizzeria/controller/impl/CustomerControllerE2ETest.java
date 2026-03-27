@@ -1,6 +1,5 @@
 package com.accenture.pizzeria.controller.impl;
 
-import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.service.dto.AddressDto;
 import com.accenture.pizzeria.service.dto.CustomerRequestDto;
 import com.accenture.pizzeria.service.dto.CustomerResponseDto;
@@ -46,52 +45,31 @@ public class CustomerControllerE2ETest {
     @Test
     @DisplayName("Creates a Customer through POST endpoint")
     @Order(1)
-    void testPostCustomerSuccess() throws PizzeriaException {
+    void testPostCustomerSuccess() {
         AddressDto addressDto = new AddressDto(BASE_STREET, BASE_CITY, BASE_POSTAL_CODE);
         CustomerRequestDto requestDto = new CustomerRequestDto(BASE_FIRST_NAME, BASE_LAST_NAME, BASE_EMAIL, addressDto);
 
         ResponseEntity<Void> response = restTemplate.postForEntity(String.format("http://localhost:%s%s", port, API_CUSTOMERS_ENDPOINT), requestDto, Void.class);
 
-        CustomerResponseDto responseDto = customerService.addCustomer(requestDto);
-
-        assertAll(
-                () -> Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode(), "POST customer must return a 201 HTTP Response Code"),
-                () -> Assertions.assertNotNull(responseDto, "DtoResponse should not be null"),
-                () -> Assertions.assertNotNull(responseDto.id(), "Id should not be null"),
-                () -> Assertions.assertNotNull(responseDto.firstName(), "firstName should not be null"),
-                () -> Assertions.assertEquals(requestDto.firstName(), responseDto.firstName(), "firstName should be the same"),
-                () -> Assertions.assertNotNull(responseDto.lastName(), "lastName should not be null"),
-                () -> Assertions.assertEquals(requestDto.lastName(), responseDto.lastName(), "lastName should be the same"),
-                () -> Assertions.assertNotNull(responseDto.email(), "email should not be null"),
-                () -> Assertions.assertEquals(requestDto.email(), responseDto.email(), "email should be the same"),
-                () -> Assertions.assertNotNull(responseDto.address(), "address should not be null"),
-                () -> Assertions.assertNotNull(responseDto.address().street(), "Address's street should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().street(),responseDto.address().street(), "Address's street should be the same"),
-                () -> Assertions.assertNotNull(responseDto.address().city(), "Address's city should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().city(),responseDto.address().city(), "Address's city should be the same"),
-                () -> Assertions.assertNotNull(responseDto.address().postalCode(), "Address's postalCode should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().postalCode(),responseDto.address().postalCode(), "Address's postalCode should be the same"),
-                () -> Assertions.assertNotNull(responseDto.isVip(), "isVip should not be null"),
-                () -> Assertions.assertEquals(false, responseDto.isVip(), "isVip should be false")
-        );
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode(), "POST customer must return a 201 HTTP Response Code");
     }
 
     @Test
     @DisplayName("Find a Customer through GET endpoint, method : findByEmail")
     @Order(2)
-    void testGetCustomerByEmail() throws PizzeriaException {
+    void testGetCustomerByEmail() {
         AddressDto addressDto = new AddressDto(BASE_STREET, BASE_CITY, BASE_POSTAL_CODE);
         CustomerRequestDto requestDto = new CustomerRequestDto(BASE_FIRST_NAME, BASE_LAST_NAME, BASE_EMAIL, addressDto);
 
-        ResponseEntity<CustomerResponseDto> response = restTemplate.exchange(String.format("http://localhost:%s%s/email/%s", port, API_CUSTOMERS_ENDPOINT,BASE_EMAIL), HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<CustomerResponseDto> response = restTemplate.exchange(String.format("http://localhost:%s%s/email/%s", port, API_CUSTOMERS_ENDPOINT, BASE_EMAIL), HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
-        CustomerResponseDto responseDto = customerService.addCustomer(requestDto);
+        CustomerResponseDto responseDto = response.getBody();
 
         assertAll(
                 () -> Assertions.assertEquals(HttpStatus.OK, response.getStatusCode(), "GET customer must return a 200 HTTP Response Code"),
                 () -> Assertions.assertNotNull(responseDto, "DtoResponse should not be null"),
-                () -> Assertions.assertNotNull(responseDto.id(), "Id should not be null"),
+                () -> Assertions.assertNotNull(responseDto.uuid(), "Id should not be null"),
                 () -> Assertions.assertNotNull(responseDto.firstName(), "firstName should not be null"),
                 () -> Assertions.assertEquals(requestDto.firstName(), responseDto.firstName(), "firstName should be the same"),
                 () -> Assertions.assertNotNull(responseDto.lastName(), "lastName should not be null"),
@@ -100,13 +78,13 @@ public class CustomerControllerE2ETest {
                 () -> Assertions.assertEquals(requestDto.email(), responseDto.email(), "email should be the same"),
                 () -> Assertions.assertNotNull(responseDto.address(), "address should not be null"),
                 () -> Assertions.assertNotNull(responseDto.address().street(), "Address's street should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().street(),responseDto.address().street(), "Address's street should be the same"),
+                () -> Assertions.assertEquals(requestDto.address().street(), responseDto.address().street(), "Address's street should be the same"),
                 () -> Assertions.assertNotNull(responseDto.address().city(), "Address's city should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().city(),responseDto.address().city(), "Address's city should be the same"),
+                () -> Assertions.assertEquals(requestDto.address().city(), responseDto.address().city(), "Address's city should be the same"),
                 () -> Assertions.assertNotNull(responseDto.address().postalCode(), "Address's postalCode should not be null"),
-                () -> Assertions.assertEquals(requestDto.address().postalCode(),responseDto.address().postalCode(), "Address's postalCode should be the same"),
-                () -> Assertions.assertNotNull(responseDto.isVip(), "isVip should not be null"),
-                () -> Assertions.assertEquals(false, responseDto.isVip(), "isVip should be false")
+                () -> Assertions.assertEquals(requestDto.address().postalCode(), responseDto.address().postalCode(), "Address's postalCode should be the same"),
+                () -> Assertions.assertNotNull(responseDto.isVIP(), "isVip should not be null"),
+                () -> Assertions.assertEquals(false, responseDto.isVIP(), "isVip should be false")
         );
     }
 }

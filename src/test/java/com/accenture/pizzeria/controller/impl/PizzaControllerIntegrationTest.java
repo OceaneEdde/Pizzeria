@@ -6,7 +6,6 @@ import com.accenture.pizzeria.model.Ingredient;
 import com.accenture.pizzeria.service.impl.PizzaServiceImpl;
 import com.accenture.pizzeria.service.dto.PizzaRequestDto;
 import com.accenture.pizzeria.service.dto.PizzaResponseDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -17,9 +16,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @WebMvcTest(controllers = PizzaController.class)
 class PizzaControllerIntegrationTest {
@@ -32,10 +35,7 @@ class PizzaControllerIntegrationTest {
     @MockitoBean
     private PizzaServiceImpl pizzaService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
+    @MockitoBean
     private PizzaMapper pizzaMapper;
 
     @Test
@@ -51,12 +51,14 @@ class PizzaControllerIntegrationTest {
         PizzaRequestDto dtoRequest = new PizzaRequestDto(name, size, ingredients, basePrice);
         PizzaResponseDto responseDto = new PizzaResponseDto(name, size, ingredients, basePrice);
 
-        Mockito.when(pizzaService.addPizza(Mockito.any(PizzaRequestDto.class))).thenReturn(responseDto);
 
+        Mockito.doReturn(responseDto).when(pizzaService).addPizza(Mockito.any(PizzaRequestDto.class));
         mockMvc.perform(MockMvcRequestBuilders.post(API_PIZZA_ENDPOINT)
+                        .with(csrf())
+                        .with(user("test").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                        .content(objectMapper.writeValueAsString(dtoRequest)))
+                        .content(new ObjectMapper().writeValueAsString(dtoRequest)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }

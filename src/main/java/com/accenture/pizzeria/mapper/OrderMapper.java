@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {PizzaMapper.class})
 public interface OrderMapper {
 
-    @Mapping(target = "email", ignore = true)
+    @Mapping(target = "customer.email", ignore = true)
     Order toOrder(OrderRequestDto requestDto);
 
     OrderResponseDto toOrderResponseDto(Order entity);

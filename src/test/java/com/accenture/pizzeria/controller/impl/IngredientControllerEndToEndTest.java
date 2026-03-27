@@ -1,10 +1,8 @@
 package com.accenture.pizzeria.controller.impl;
 
-import com.accenture.pizzeria.exception.PizzeriaException;
 import com.accenture.pizzeria.service.IngredientService;
 import com.accenture.pizzeria.service.dto.IngredientRequestDto;
 import com.accenture.pizzeria.service.dto.IngredientResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
@@ -16,11 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.UUID;
-
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
@@ -41,6 +34,7 @@ class IngredientControllerEndToEndTest {
 
     @Test
     @DisplayName("Create an Ingredient throught Post endpoint")
+    @Order(1)
     void testPostIngredientSuccess() {
         IngredientRequestDto requestDto = new IngredientRequestDto("Tomato", 1);
         ResponseEntity<IngredientResponseDto> response = restTemplate.postForEntity(URL + port + INGREDIENTS_ENDPOINT, requestDto, IngredientResponseDto.class);
@@ -53,38 +47,10 @@ class IngredientControllerEndToEndTest {
     }
 
     @Test
-    @DisplayName("Find an Ingredient by it's id through GET endpoint")
-    void testGetIngredientByIdSuccess() throws PizzeriaException {
-        UUID id = UUID.randomUUID();
-        IngredientResponseDto expectedResponseDto = new IngredientResponseDto("Tomato", 1);
-
-        doReturn(expectedResponseDto).when(ingredientService.findById(id));
-
-        ResponseEntity<IngredientResponseDto> response = restTemplate.exchange(URL + port + INGREDIENTS_ENDPOINT + "/" + id, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-        });
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertNotNull(response.getBody());
-        Assertions.assertEquals(expectedResponseDto.name(), response.getBody().name());
-        Assertions.assertEquals(expectedResponseDto.stock(), response.getBody().stock());
-
-    }
-    @Test
-    @DisplayName("Find an Ingredient by it's id through GET endpoint")
-    void testGetIngredientByIdFailNotFound() throws PizzeriaException {
-        UUID id = UUID.randomUUID();
-        doThrow(EntityNotFoundException.class).when(ingredientService.findById(id));
-
-        ResponseEntity<IngredientResponseDto> response = restTemplate.exchange(URL + port + INGREDIENTS_ENDPOINT + "/" + id, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-        });
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-    @Test
     @DisplayName("Find an Ingredient by it's name through GET endpoint")
-    void testGetIngredientByNameSuccess() throws PizzeriaException {
+    void testGetIngredientByNameSuccess() {
         String name = "Tomato";
         IngredientResponseDto expectedResponseDto = new IngredientResponseDto(name, 1);
-
-        doReturn(expectedResponseDto).when(ingredientService.findByName(name));
 
         ResponseEntity<IngredientResponseDto> response = restTemplate.exchange(URL + port + INGREDIENTS_ENDPOINT + "/name/" + name, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });

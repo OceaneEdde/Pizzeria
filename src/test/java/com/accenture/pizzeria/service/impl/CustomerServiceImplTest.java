@@ -79,7 +79,7 @@ class CustomerServiceImplTest {
 
             Assertions.assertAll(
                     () -> Assertions.assertNotNull(actualResponseDto, "DtoResponse should not be null"),
-                    () -> Assertions.assertNotNull(actualResponseDto.id(), "Id should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.uuid(), "Id should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.firstName(), "firstName should not be null"),
                     () -> Assertions.assertEquals(expectedResponseDto.firstName(), actualResponseDto.firstName(), "firstName should be the same"),
                     () -> Assertions.assertNotNull(actualResponseDto.lastName(), "lastName should not be null"),
@@ -90,8 +90,8 @@ class CustomerServiceImplTest {
                     () -> Assertions.assertNotNull(actualResponseDto.address().street(), "Address's street should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.address().city(), "Address's city should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.address().postalCode(), "Address's postalCode should not be null"),
-                    () -> Assertions.assertNotNull(actualResponseDto.isVip(), "isVip should not be null"),
-                    () -> Assertions.assertEquals(expectedResponseDto.isVip(), actualResponseDto.isVip(), "isVip should be the same")
+                    () -> Assertions.assertNotNull(actualResponseDto.isVIP(), "isVip should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.isVIP(), actualResponseDto.isVIP(), "isVip should be the same")
             );
 
             verify(spy, times(1)).verify(any(CustomerRequestDto.class));
@@ -130,7 +130,7 @@ class CustomerServiceImplTest {
 
             Assertions.assertAll(
                     () -> Assertions.assertNotNull(actualResponseDto, "DtoResponse should not be null"),
-                    () -> Assertions.assertNotNull(actualResponseDto.id(), "Id should not be null"),
+                    () -> Assertions.assertNotNull(actualResponseDto.uuid(), "Id should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.firstName(), "firstName should not be null"),
                     () -> Assertions.assertEquals(expectedResponseDto.firstName(), actualResponseDto.firstName(), "firstName should be the same"),
                     () -> Assertions.assertNotNull(actualResponseDto.lastName(), "lastName should not be null"),
@@ -141,8 +141,8 @@ class CustomerServiceImplTest {
                     () -> Assertions.assertNotNull(actualResponseDto.address().street(), "Address's street should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.address().city(), "Address's city should not be null"),
                     () -> Assertions.assertNotNull(actualResponseDto.address().postalCode(), "Address's postalCode should not be null"),
-                    () -> Assertions.assertNotNull(actualResponseDto.isVip(), "isVip should not be null"),
-                    () -> Assertions.assertEquals(expectedResponseDto.isVip(), actualResponseDto.isVip(), "isVip should be the same")
+                    () -> Assertions.assertNotNull(actualResponseDto.isVIP(), "isVip should not be null"),
+                    () -> Assertions.assertEquals(expectedResponseDto.isVIP(), actualResponseDto.isVIP(), "isVip should be the same")
             );
         }
 
